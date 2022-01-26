@@ -47,110 +47,98 @@ class _CreateUserWidgetState extends State<CreateUserWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          width: 400,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade300,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(10),
+    return Center(
+      child: Container(
+        width: 400,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              widget.client ? "Добавление клиента" : "Добавление сотрудника",
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                widget.client ? "Добавление клиента" : "Добавление сотрудника",
-                style: TextStyle(
-                  fontSize: 18,
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'Фамилия',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (newString) {
+                _login = newString;
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'Имя',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (newString) {
+                _login = newString;
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            widget.client
+                ? TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Автомобиль',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (newString) {
+                      _login = newString;
+                    },
+                  )
+                : DropdownButton(
+                    value: _currentCategory,
+                    items: getDropDownMenuItems(),
+                    onChanged: changedDropDownItem),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'Логин',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (newString) {
+                _login = newString;
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (newString) {
+                _password = newString;
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 16)),
+            MaterialButton(
+              child: Container(
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Создать',
+                      style: TextStyle(fontSize: 18, color: Colors.white)),
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Фамилия',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (newString) {
-                  _login = newString;
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Имя',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (newString) {
-                  _login = newString;
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Отчество',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (newString) {
-                  _login = newString;
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              widget.client
-                  ? TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Автомобиль',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (newString) {
-                        _login = newString;
-                      },
-                    )
-                  : DropdownButton(
-                      value: _currentCategory,
-                      items: getDropDownMenuItems(),
-                      onChanged: changedDropDownItem),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Логин',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (newString) {
-                  _login = newString;
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              TextField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (newString) {
-                  _password = newString;
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 16)),
-              MaterialButton(
-                child: Container(
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Создать',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
-                onPressed: () => null,
-              ),
-            ],
-          ),
+              onPressed: () => null,
+            ),
+          ],
         ),
       ),
     );

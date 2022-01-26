@@ -139,8 +139,6 @@ class API {
     return null;
   }
 
-  // Future<Contract?>
-
   Future<List<User>?> getUserList() async {
     String params = "user/";
     final res = await getResponse(params);
@@ -211,6 +209,26 @@ class API {
     return null;
   }
 
+  Future<bool> postOrder(String user, String startDate, String endDate,
+      List<String> services) async {
+    String params = "order/";
+    var body = jsonEncode(<String, dynamic>{
+      'status': "В обработке",
+      'start_date': startDate,
+      'end_date': endDate,
+      'staff': "",
+      'client': user,
+      'services': services,
+    });
+    final res = await postResponse(params, body);
+    if (res.statusCode == 201) {
+      //final body = json.decode(utf8.decode(res.bodyBytes));
+      //var contract = Contract.fromJson(body);
+      return true;
+    }
+    return false;
+  }
+
   Future<Config?> postConfig(String user, String module) async {
     String params = "config/";
     var body = jsonEncode(<String, dynamic>{
@@ -249,6 +267,21 @@ class API {
       return true;
     }
     return false;
+  }
+
+  Future<User?> postUser(String username, String email) async {
+    String params = "user/registration/";
+    var body = jsonEncode(<String, dynamic>{
+      'username': username,
+      'email': email,
+    });
+    final res = await postResponse(params, body);
+    if (res.statusCode == 201) {
+      final body = json.decode(utf8.decode(res.bodyBytes));
+      var user = User.fromJson(body);
+      return user;
+    }
+    return null;
   }
 
   Future<String?> patchContract(String id, String status) async {

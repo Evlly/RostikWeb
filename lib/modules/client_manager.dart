@@ -3,6 +3,7 @@ import 'package:rostik_admin_web/UserWidget.dart';
 import 'package:rostik_admin_web/api.dart';
 import 'package:rostik_admin_web/model/service.dart';
 import 'package:rostik_admin_web/model/user.dart';
+import 'package:rostik_admin_web/modules/create_user.dart';
 
 class ClientManagerScreen extends StatefulWidget {
   const ClientManagerScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
   List<User>? users;
 
   List<Service>? services;
-  List<Service> selectedServices = [];
+  List<String> selectedServices = [];
   String searchServiceType = 'Все';
 
   String? selectedUserId;
@@ -54,6 +55,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        CreateUserWidget(client: true),
         Text('Клиенты:', style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(
           width: 200,
@@ -109,10 +111,10 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
               })
               .map((e) => GestureDetector(
                     onTap: () {
-                      if (selectedServices.contains(e)) {
-                        selectedServices.remove(e);
+                      if (selectedServices.contains(e.id)) {
+                        selectedServices.remove(e.id);
                       } else {
-                        selectedServices.add(e);
+                        selectedServices.add(e.id);
                       }
                       setState(() {});
                     },
@@ -121,7 +123,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 0.5),
-                          color: selectedServices.contains(e)
+                          color: selectedServices.contains(e.id)
                               ? Colors.blue
                               : Colors.white,
                         ),
@@ -184,6 +186,8 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
   }
 
   void postOnBackend() {
-    print('lskdjflksdjf');
+    API()
+        .postOrder(selectedUserId!, startDate!, endDate!, selectedServices)
+        .then((value) {});
   }
 }
