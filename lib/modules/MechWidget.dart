@@ -30,7 +30,7 @@ class _MechWidgetState extends State<MechWidget> {
       setState(() {
         orders = value!;
         orders = orders
-            .where((element) => element.staff.id == WebStorage.instance.userId)
+            .where((element) => element.staff?.id == WebStorage.instance.userId)
             .toList();
       });
     });

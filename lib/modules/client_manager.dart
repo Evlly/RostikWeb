@@ -160,6 +160,16 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
                 });
               }),
         ),
+        SizedBox(
+          width: 200,
+          child: TextField(
+              decoration: InputDecoration(hintText: 'Промокод'),
+              onChanged: (newSearchText) {
+                setState(() {
+                  endDate = newSearchText;
+                });
+              }),
+        ),
         SizedBox(height: 50),
         MaterialButton(
           child: Text('Создать'),

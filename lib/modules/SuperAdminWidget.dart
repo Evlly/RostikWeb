@@ -10,6 +10,7 @@ import 'package:rostik_admin_web/model/module.dart';
 import 'package:rostik_admin_web/model/service.dart';
 import 'package:rostik_admin_web/model/user.dart';
 import 'package:rostik_admin_web/modules/create_user.dart';
+import 'package:usb_device/usb_device.dart';
 
 import '../model/config.dart';
 
@@ -23,6 +24,7 @@ class SuperAdminWidget extends StatefulWidget {
 class _SuperAdminWidgetState extends State<SuperAdminWidget> {
   List<User>? users;
   User? selectedUser;
+  final UsbDevice usbDevice = UsbDevice();
 
   List<Config> configs = [];
 
@@ -58,9 +60,19 @@ class _SuperAdminWidgetState extends State<SuperAdminWidget> {
     });
   }
 
+  void checkUsb() async {
+    var pairedDevices = await usbDevice.pairedDevices; // get paired devices
+    var pairedDevice = await usbDevice.requestDevices([DeviceFilter(vendorId : 0x00, productId: 0x00)]); // par a device
+    List<USBConfiguration> availableConfigurations = await usbDevice.getAvailableConfigurations(pairedDevice); // get device's configurations
+    USBDeviceInfo deviceInfo = await usbDevice.getPairedDeviceInfo(pairedDevice); // get device's info
+    await usbDevice.open(pairedDevice); // start session
+    await usbDevice.close(pairedDevice); // close session
+  }
+
   @override
   void initState() {
     super.initState();
+    //checkUsb();
     API().getUserList().then((value) {
       setState(() {
         users = value!.where((element) => element.role != 'Клиент').toList();

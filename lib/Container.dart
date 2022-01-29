@@ -21,7 +21,7 @@ class ContainerWidget extends StatefulWidget {
 class _ContainerWidgetState extends State<ContainerWidget> {
   Map<String, Widget> modules = {
     "Админ-панель": SuperAdminWidget(),
-    // "Механик": MechWidget(),
+      "Механик": MechWidget(),
     "Клиент-менеджер": ClientManagerScreen(),
     //"": SuperAdminWidget(),
     //"": SuperAdminWidget(),
@@ -40,6 +40,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
       if (value != null) {
         title += "${value.role} ${value.last_name} ${value.first_name}";
         setState(() {});
+        //Получение списка конфигов из АПИ и добавление ихи в список
         API().getConfigOtherUser(WebStorage.instance.userId).then((value) {
           value?.forEach((element) {
             if (element.enable) widgets.add(modules[element.module]);

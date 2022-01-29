@@ -7,7 +7,7 @@ part 'contract.g.dart';
 @JsonSerializable()
 class Contract {
   String id;
-  User staff;
+  User? staff;
   User client;
   List<Service> services;
   String start_date;
