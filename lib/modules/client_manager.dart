@@ -55,7 +55,34 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CreateUserWidget(client: true),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(16),
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Text('Добавить промокод', style: TextStyle(fontSize: 20)),
+                    TextField(
+                        decoration:
+                            InputDecoration(hintText: 'Введите промокод')),
+                    MaterialButton(
+                      onPressed: () => null,
+                      child: Text('Добавить'),
+                    )
+                  ],
+                )),
+            CreateUserWidget(client: true),
+          ],
+        ),
         Text('Клиенты:', style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(
           width: 200,
@@ -162,13 +189,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
         ),
         SizedBox(
           width: 200,
-          child: TextField(
-              decoration: InputDecoration(hintText: 'Промокод'),
-              onChanged: (newSearchText) {
-                setState(() {
-                  endDate = newSearchText;
-                });
-              }),
+          child: TextField(decoration: InputDecoration(hintText: 'Промокод')),
         ),
         SizedBox(height: 50),
         MaterialButton(

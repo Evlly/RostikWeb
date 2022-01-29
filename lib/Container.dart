@@ -7,6 +7,7 @@ import 'package:rostik_admin_web/modules/SuperAdminWidget.dart';
 import 'package:rostik_admin_web/api.dart';
 import 'package:rostik_admin_web/model/user.dart';
 import 'package:rostik_admin_web/modules/MechWidget.dart';
+import 'package:rostik_admin_web/modules/admin_widget.dart';
 import 'package:rostik_admin_web/modules/client_manager.dart';
 import 'package:rostik_admin_web/modules/create_user.dart';
 import 'package:rostik_admin_web/web_storage.dart';
@@ -21,10 +22,9 @@ class ContainerWidget extends StatefulWidget {
 class _ContainerWidgetState extends State<ContainerWidget> {
   Map<String, Widget> modules = {
     "Админ-панель": SuperAdminWidget(),
-      "Механик": MechWidget(),
+    "Механик": MechWidget(),
     "Клиент-менеджер": ClientManagerScreen(),
-    //"": SuperAdminWidget(),
-    //"": SuperAdminWidget(),
+    "Админ": AdminWidget(),
   };
 
   String title = "Автосервис Ростик: ";
@@ -40,7 +40,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
       if (value != null) {
         title += "${value.role} ${value.last_name} ${value.first_name}";
         setState(() {});
-        //Получение списка конфигов из АПИ и добавление ихи в список
         API().getConfigOtherUser(WebStorage.instance.userId).then((value) {
           value?.forEach((element) {
             if (element.enable) widgets.add(modules[element.module]);
