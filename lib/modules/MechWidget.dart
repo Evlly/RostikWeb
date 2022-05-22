@@ -22,9 +22,12 @@ class _MechWidgetState extends State<MechWidget> {
   String strs = "";
   int i = 0;
   List<Service> ss = [];
+  Contract? order;
   String userId = "";
   List<Contract> orders = [];
-
+  int currentItem=-1;
+  User? client;
+  bool checkedValue = false;
   void getContracts() {
     API().getContracts().then((value) {
       setState(() {
@@ -32,6 +35,14 @@ class _MechWidgetState extends State<MechWidget> {
         orders = orders
             .where((element) => element.staff?.id == WebStorage.instance.userId)
             .toList();
+      });
+    });
+  }
+
+  void getUser(){
+    API().getUser(userId).then((value) {
+      setState(() {
+        client = value;
       });
     });
   }
@@ -52,14 +63,32 @@ class _MechWidgetState extends State<MechWidget> {
     return items;
   }
 
+  Color getColor(String status){
+    switch(status){
+      case "В обработке":
+          return Colors.amberAccent;
+          break;
+      case "В работе":
+        return Colors.lightGreenAccent;
+        break;
+    }
+    return Colors.black45;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Card(
+            shape: BeveledRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+        child:
         Container(
-          width: 200,
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          width: 500,
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
               itemCount: orders.length,
@@ -68,63 +97,101 @@ class _MechWidgetState extends State<MechWidget> {
                 return GestureDetector(
                     onTap: () {
                       setState(() {
+                        getUser();
+                        currentItem = index;
+                        order = orders[index];
                         ss = orders[index].services;
                         userId = orders[index].client.id;
                       });
                     },
-                    child: Card(
-                      color: orders[index].status == "В работе"
-                          ? Colors.blue
-                          : orders[index].status == "В обработке"
-                              ? Colors.green
-                              : Colors.black12,
                       child: Container(
-                        child: Column(
+                        color: index==currentItem ? Colors.blue: Colors.transparent,
+                        padding: EdgeInsets.only(bottom: 12),
+                        child:
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children:[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Клиент " + orders[index].client.first_name),
-                            Text("Начинаем " + orders[index].start_date),
-                            Text("Заканчиваем " + orders[index].end_date),
-                            Row(children: [
-                              Text("Статус "),
-                              DropdownButton(
-                                  value: currentStatus,
-                                  items: getDropDownMenuItems(),
-                                  onChanged: (String? selected) {
-                                    setState(() {
-                                      currentStatus = selected!;
-                                      API()
-                                          .patchContract(
-                                              orders[index].id, currentStatus)
-                                          .then((value) {
-                                        setState(() {
-                                          orders[index].status = value!;
-                                        });
-                                      });
-                                    });
-                                  })
-                            ])
+                            Text("Клиент " + (orders[index].client.first_name ?? "")),
+                            Text("Начало заказа " + orders[index].start_date),
                           ],
                         ),
+                          Text(orders[index].status, style: TextStyle( color: getColor(orders[index].status),),)
+                          ]),
                       ),
-                    ));
+                    );
               }),
-        ),
+        )),
+        Card(
+          color: getColor(order?.status??""),
+            shape: BeveledRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+        child:
         Container(
+            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
             height: MediaQuery.of(context).size.height,
-            width: 200,
-            child: ListView.builder(
+            width: 500,
+            child:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Клиент: "+(client?.first_name??""), style: TextStyle(fontSize: 28),),
+              Text("Телефон: "+(client?.phone??"")),
+              Text("Автомобиль: "+(client?.car??"")),
+              Text(""),
+              Text("                      Услуги по заказу: ", style: TextStyle(fontSize: 24, color: Colors.blue),),
+              Text(""),
+            Container(
+              height: 300,
+              width: 500,
+              child:
+            ListView.builder(
                 itemCount: ss.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                      child: Column(
+                  return  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         ss[index].name,
                         style: TextStyle(fontSize: 18),
-                      )
+                      ),
+                      Checkbox(value: checkedValue, onChanged:(bl){
+                        setState(() {
+                          checkedValue = bl!;
+                        });
+                      })
                     ],
-                  ));
+                  );
                 })),
+              Text("Сроки работы: "+(order?.start_date??"")+" - "+(order?.end_date??""), style: TextStyle(fontSize: 22)),
+              Row(
+                children: [
+                  Text("Статус ", style: TextStyle(fontSize: 22)),
+                  DropdownButton(
+                    value: order?.status,
+                    items: getDropDownMenuItems(),
+                    onChanged: (String? selected) {
+                      String currentStatus = order?.status??"";
+                      setState(() {
+                        currentStatus = selected!;
+                        API()
+                            .patchContract(
+                            order?.id??"", currentStatus)
+                            .then((value) {
+                          setState(() {
+                            order?.status = value!;
+                          });
+                        });
+                      });
+                    }
+                  )
+                ],
+              )
+            ]))),
         // TODO
         // UserWidget(user: user)
       ],

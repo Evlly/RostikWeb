@@ -53,6 +53,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         title: Text(title),
       ),
@@ -66,9 +67,10 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   Padding(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Text(
+                        "Модуль " +
                         modules.keys.firstWhere(
                             (element) => modules[element] == widgets[index]),
-                        style: TextStyle(fontSize: 20, color: Colors.blue),
+                        style: TextStyle(fontSize: 30, color: Colors.blue),
                       )),
                   widgets[index],
                   Divider(

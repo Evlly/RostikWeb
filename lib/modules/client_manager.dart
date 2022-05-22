@@ -112,7 +112,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
                     },
                     child: Container(
                       decoration: selectedUserId == user.id
-                          ? BoxDecoration(border: Border.all())
+                          ? BoxDecoration(border: Border.all(width: 3), color: Colors.blue)
                           : null,
                       child: UserWidget(user: user),
                     ),
@@ -193,8 +193,17 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
         ),
         SizedBox(height: 50),
         MaterialButton(
-          child: Text('Создать'),
+          child:
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(2)),
+                ),
+          child:
+          Text('Создать')
+              ),
           onPressed: postOnBackend,
+
         ),
       ],
     );

@@ -129,7 +129,7 @@ class API {
   }
 
   Future<User?> getUser(String id) async {
-    String params = "user/$id";
+    String params = "user/$id/";
     final res = await getResponse(params);
     if (res.statusCode == 200) {
       final body = json.decode(utf8.decode(res.bodyBytes));
