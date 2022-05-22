@@ -50,38 +50,57 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    Dialog dialog = Dialog(
+      child: CreateUserWidget(client: true,),
+    );
+
+    Dialog dialogPromocode = Dialog(
+      child: Container(
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: const EdgeInsets.all(16),
+          width: 300,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: Column(
+            children: [
+              Text('Добавить промокод', style: TextStyle(fontSize: 20)),
+              TextField(
+                  decoration:
+                  InputDecoration(hintText: 'Введите промокод')),
+              MaterialButton(
+                onPressed: () => null,
+                child: Text('Добавить'),
+              )
+            ],
+          ))
+    );
+
     if (users == null || services == null) return Container();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                padding: const EdgeInsets.all(16),
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text('Добавить промокод', style: TextStyle(fontSize: 20)),
-                    TextField(
-                        decoration:
-                            InputDecoration(hintText: 'Введите промокод')),
-                    MaterialButton(
-                      onPressed: () => null,
-                      child: Text('Добавить'),
-                    )
-                  ],
-                )),
-            CreateUserWidget(client: true),
-          ],
+          Text("Для создания нового заказа, выберите клиента и услуги\n", style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),),
+          MaterialButton(
+              child: Text("Создать клиента", style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.bold),),
+              onPressed:(){
+          showDialog(context: context, builder: (context)=>dialog);
+          }),
+            MaterialButton(
+                child: Text("Создать промокод", style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.bold),),
+                onPressed:(){
+                  showDialog(context: context, builder: (context)=>dialogPromocode);
+                })
+            
+    ]
         ),
         Text('Клиенты:', style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(
@@ -155,10 +174,11 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
                               : Colors.white,
                         ),
                         width: 150,
-                        height: 100,
+                        height: 80,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(e.type),
                             Text(e.name,
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(e.price + ' ₽'),
@@ -194,14 +214,7 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
         SizedBox(height: 50),
         MaterialButton(
           child:
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(2)),
-                ),
-          child:
-          Text('Создать')
-              ),
+             Text("Создать заказ", style: TextStyle(fontSize: 24, color: Colors.blue),),
           onPressed: postOnBackend,
 
         ),
@@ -231,3 +244,35 @@ class _ClientManagerScreenState extends State<ClientManagerScreen> {
         .then((value) {});
   }
 }
+
+
+/*
+ Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(16),
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Text('Добавить промокод', style: TextStyle(fontSize: 20)),
+                    TextField(
+                        decoration:
+                            InputDecoration(hintText: 'Введите промокод')),
+                    MaterialButton(
+                      onPressed: () => null,
+                      child: Text('Добавить'),
+                    )
+                  ],
+                )),
+            CreateUserWidget(client: true),
+          ],
+        ),
+ */
