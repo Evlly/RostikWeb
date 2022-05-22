@@ -95,9 +95,16 @@ class _SuperAdminWidgetState extends State<SuperAdminWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Card(
+        child:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+          children:[
+            Text("Сотрудники", style: TextStyle(color: Colors.blue, fontSize: 28),),
         Container(
-          width: 200,
-          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(top: 10, left: 50),
+          width: 500,
+          height: 500,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
@@ -108,21 +115,129 @@ class _SuperAdminWidgetState extends State<SuperAdminWidget> {
                   });
                   getConfigs();
                 },
-                child: Card(
-                    color: current == index ? Colors.blue : Colors.white38,
-                    child: Column(
-                      children: [
-                        Text(users![index].last_name),
-                        Text(users![index].first_name),
-                        Text(users![index].middle_name)
-                      ],
-                    )),
+                child: Text(users![index].last_name+" "+users![index].first_name.characters.first+". " +users![index].middle_name.characters.first+".",
+                style: TextStyle(fontSize: 24, color: current==index?Colors.blue:Colors.black),
+                ),
               );
             },
             itemCount: users!.length,
           ),
         ),
-        (selectedUser != null) ? UserWidget(user: selectedUser!) : Container(),
+          Padding(padding: EdgeInsets.only(bottom: 20),
+              child:
+          Text("Для назначения прав персоналу, нажмите на сотрудника"))
+          ]
+
+            )
+        ),
+        Container(
+            padding: EdgeInsets.only( left: 50),
+          width: 500,
+    height: 570,
+    child:
+        Card(
+          child:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text((selectedUser?.last_name??"") + " "+(selectedUser?.first_name??"")+" "+(selectedUser?.middle_name??"") , style: TextStyle(fontSize: 22),),
+                  Text(selectedUser?.role??"", style: TextStyle(fontSize: 18),),
+                  Text(selectedUser?.email??"", style: TextStyle(fontSize: 18),),
+                  Text(selectedUser?.phone??"", style: TextStyle(fontSize: 18),),
+                  Text("\nДоступные модули: ", style: TextStyle(fontSize: 24, color: Colors.blue),),
+                  Container(
+                    padding: EdgeInsets.only(left: 50, top: 20),
+                    width: 200,
+                    height: 300,
+                    child:
+                  ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: Card(
+                          color: configs[index].enable? Colors.greenAccent : Colors.black12 ,
+                            child: Column(
+                              children: [
+                                Text(configs[index].module),
+                                Switch(
+                                    value: configs[index].enable,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        configs[index].enable = value;
+                                      });
+                                      API()
+                                          .patchConfig(selectedUser!.id,
+                                          configs[index].id, value)
+                                          .then((value) {
+                                        if (value == null) {
+                                          setState(() {
+                                            configs[index].enable =
+                                            !configs[index].enable;
+                                          });
+                                        }
+                                      });
+                                    }),
+                                GestureDetector(
+                                  onTap: () {
+                                    API()
+                                        .deleteConfig(configs[index].id)
+                                        .then((value) {
+                                      if (value) getConfigs();
+                                    });
+                                  },
+                                  child: Text(
+                                    "Удалить",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                )
+                              ],
+                            )),
+                      );
+                    },
+                    itemCount: configs.length,
+                  )),
+                  Text("Добавить модуль: ", style: TextStyle(fontSize: 18, color: Colors.blue),),
+                  DropdownButton(
+                      value: currentModule,
+                      items: getDropDownMenuItems(),
+                      onChanged: changedDropDownItem),
+                  RawMaterialButton(
+                    onPressed: () {
+                      API()
+                          .postConfig(selectedUser!.id, currentModule)
+                          .then((value) {
+                        if (value != null) {
+                          getConfigs();
+                        }
+                      });
+                    },
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    child: Icon(
+                      Icons.add,
+                      size: 25.0,
+                      color: Colors.green,
+                    ),
+                    padding: EdgeInsets.all(5.0),
+                    shape: CircleBorder(),
+                  ),
+
+                ],
+              )
+            ],
+          )
+        )
+        )
+
+      ],
+    );
+  }
+}
+/*
+(selectedUser != null) ? UserWidget(user: selectedUser!) : Container(),
         (selectedUser != null)
             ? Column(children: [
                 Row(
@@ -204,7 +319,6 @@ class _SuperAdminWidgetState extends State<SuperAdminWidget> {
                 )
               ])
             : Container(),
-      ],
-    );
-  }
-}
+
+
+ */

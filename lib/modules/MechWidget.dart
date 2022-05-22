@@ -72,7 +72,7 @@ class _MechWidgetState extends State<MechWidget> {
         return Colors.lightGreenAccent;
         break;
     }
-    return Colors.black45;
+    return Colors.grey;
   }
 
   @override
